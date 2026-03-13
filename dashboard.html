@@ -603,14 +603,16 @@ function renderAll(){
   const crypto     = calcPf(cryptoList);
   const obligInvEur= OBLIGATIONS_STATIC.reduce((s,o)=>s+o.investi_eur,0);
   const obligFacUsd= OBLIGATIONS_STATIC.reduce((s,o)=>s+o.faciale_usd,0);
-  const totalV     = cto.valeur+pea.valeur+obligInvEur+crypto.valeur;
-  const totalInvesti=cto.investi+pea.investi+obligInvEur+crypto.investi;
-  // PnL obligataire = valeur faciale en EUR - montant investi
+  // Option B : obligations figées au montant investi dans le patrimoine
+  const totalV      = cto.valeur+pea.valeur+obligInvEur+crypto.valeur;
+  const totalInvesti= cto.investi+pea.investi+obligInvEur+crypto.investi;
+  // PnL latent = actions/ETF/crypto uniquement (oblig = 0 latent)
+  const totalLatent  = cto.pvLatent+pea.pvLatent+crypto.pvLatent;
+  const totalRealise = cto.realise+pea.realise+crypto.realise;
+  const totalPvTotal = totalLatent+totalRealise;
+  const totalPvPct   = totalInvesti>0?(totalPvTotal/totalInvesti)*100:0;
+  // PnL maturité oblig — affiché séparément sur la carte, pas dans le total
   const obligPvLatent = obligFacUsd*usdEur - obligInvEur;
-  const totalLatent = cto.pvLatent+pea.pvLatent+crypto.pvLatent+obligPvLatent;
-  const totalRealise= cto.realise+pea.realise+crypto.realise;
-  const totalPvTotal= totalLatent+totalRealise;
-  const totalPvPct  = totalInvesti>0?(totalPvTotal/totalInvesti)*100:0;
   const totalDay    = cto.changeDay+pea.changeDay+crypto.changeDay;
   const base        = totalV-totalDay;
   const totalDayPct = base>0?(totalDay/base)*100:0;
