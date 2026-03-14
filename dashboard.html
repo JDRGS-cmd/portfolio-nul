@@ -597,6 +597,10 @@ function renderAll(){
   const peaList    = positions.filter(p=>p.Portefeuille==='PEA');
   const cryptoList = positions.filter(p=>p.Portefeuille==='CRYPTO');
   const cto        = calcPf(ctoList);
+  // PV réalisées historiques CTO (vente ETH) — non présentes dans operations.csv
+  cto.realise  += 754.15;
+  cto.pvTotal   = cto.pvLatent + cto.realise;
+  cto.pvTotalPct= cto.investi>0?(cto.pvTotal/cto.investi)*100:0;
   const pea        = calcPf(peaList);
   const crypto     = calcPf(cryptoList);
   const obligInvEur= OBLIGATIONS_STATIC.reduce((s,o)=>s+o.investi_eur,0);
